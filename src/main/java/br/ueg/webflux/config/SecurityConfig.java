@@ -38,24 +38,6 @@ public class SecurityConfig {
 	public PasswordEncoder passwordEncoder() {
 	    return PasswordEncoderFactories.createDelegatingPasswordEncoder();
 	}
-	
-//	@Bean
-//	public MapReactiveUserDetailsService userDetailsService() {
-//		
-//		PasswordEncoder passEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-//		UserDetails admin = User.withUsername("admin")
-//										.password(passEncoder.encode("admin"))
-//										.roles("ADMIN", "USER")
-//										.build();
-//		
-//		UserDetails user = User.withUsername("ricardo")
-//										.password(passEncoder.encode("ricardo"))
-//										.roles("USER")
-//										.build();
-//		
-//		return new MapReactiveUserDetailsService(admin, user);
-//	}
-	
 	@Bean
 	ReactiveAuthenticationManager authenticationManager(UserServiceImpl userService, PasswordEncoder passwordEncoder) {
 		PasswordEncoder passEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
