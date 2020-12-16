@@ -25,7 +25,7 @@ public class SecurityConfig {
 				.csrf().disable()
 				.authorizeExchange()
 				.pathMatchers(HttpMethod.POST, "/**").hasRole("ADMIN")
-				.pathMatchers(HttpMethod.GET, "/**").hasRole("ADMIN")
+				.pathMatchers(HttpMethod.GET, "/**").hasRole("USER")
 				.anyExchange().authenticated()
 				.and()
 					.formLogin()

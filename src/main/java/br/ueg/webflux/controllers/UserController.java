@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import br.ueg.webflux.document.User;
 import br.ueg.webflux.services.UserServiceImpl;
@@ -30,12 +32,14 @@ public class UserController {
 	
 	@GetMapping()
 	public Flux<User> getUsers(){
-		return userServiceImpl.findAll();
+		return userServiceImpl.findAll()
+				.switchIfEmpty(monoResponseStatusNotFound());
 	}
 	
 	@GetMapping("/{id}")
 	public Mono<User> getUser(@PathVariable String id){
-		return userServiceImpl.findById(id);
+		return userServiceImpl.findById(id)
+				.switchIfEmpty(monoResponseStatusNotFound());
 	}
 	
 	@PostMapping
@@ -51,6 +55,10 @@ public class UserController {
 		user.deleteJson();
 		return userServiceImpl.save(user);
 		
+	}
+	
+	public <T> Mono<T> monoResponseStatusNotFound(){
+		return Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 	}
 	
 }
